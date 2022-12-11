@@ -1,37 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { IUser } from "../types";
-import User from "./User";
-import { Box } from "@mui/system";
-import { searchUsers } from "../api/users";
+import React from "react";
+import { Box, Grid, Typography } from "@mui/material";
+import TaskInput from "./TaskInput";
+import Task from "./Task";
+import { useTodoContext } from "../store/TodoContextProvider";
 
 const App = () => {
-  const [users, setUsers] = useState<IUser[]>();
-  useEffect(() => {
-    (async () => {
-      const result = await searchUsers("avinash");
-      setUsers(result.items);
-    })();
-  }, []);
-
+  const [{ tasks }] = useTodoContext();
   return (
     <Box
       sx={{
         background: (theme) => theme.palette.background.default,
         minHeight: "100vh",
         display: "flex",
-        justifyContent: "center",
         flexDirection: "column",
+        alignItems: "center",
       }}
     >
-      {users && (
-        <Box
-          sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
-        >
-          {users.map((user, index) => (
-            <User key={`${user.login}-${index}`} user={user} />
+      <Typography variant="h2">Todo App</Typography>
+      <Grid container flexDirection="column" sx={{ width: "60%" }}>
+        <Grid item>
+          <TaskInput />
+        </Grid>
+
+        <Grid item>
+          {tasks?.map((task) => (
+            <Task task={task} />
           ))}
-        </Box>
-      )}
+        </Grid>
+      </Grid>
     </Box>
   );
 };
